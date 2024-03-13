@@ -1,6 +1,5 @@
 package br.com.projetoMVC.teste;
 
-import br.com.projetoMVC.model.Model;
 import br.com.projetoMVC.util.ConnectionFactory;
 
 import java.sql.Connection;
