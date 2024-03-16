@@ -44,6 +44,20 @@ public class ProdutoController {
         }
     }
 
+    public boolean alterar(Produto produto) {
+        try {
+            GenericDAO dao = new ProdutoDAOimpl();
+
+            dao.alterar(produto);
+
+            return true;
+        } catch(Exception e) {
+            System.out.println("Problemas no controller para alterar um produto");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean cadastrar(Produto produto) {
         try {
             GenericDAO dao = new ProdutoDAOimpl();
@@ -56,5 +70,9 @@ public class ProdutoController {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public void excluir(Integer id) {
+
     }
 }

@@ -47,6 +47,7 @@ public class ProdutoDAOimpl implements GenericDAO {
                 ConnectionFactory.closeConnection(this.connection, stmt, rs);
             } catch(Exception e) {
                 System.out.println("Problemas na DAO ao fechar conexao");
+                e.printStackTrace();
             }
         }
 
@@ -55,7 +56,7 @@ public class ProdutoDAOimpl implements GenericDAO {
 
     @Override
     public Object listarPorId(Integer id) {
-        Object objeto = null;
+        Produto produto = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         String query = "SELECT * FROM produto WHERE id=?";
@@ -65,11 +66,10 @@ public class ProdutoDAOimpl implements GenericDAO {
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
 
-            while(rs.next()) {
-                Produto produto = new Produto();
+            if(rs.next()) {
+                produto = new Produto();
                 produto.setId(rs.getInt("id"));
                 produto.setDescricao(rs.getString("descricao"));
-                objeto = produto;
             }
         } catch(SQLException e) {
             System.out.println("Problemas na DAO ao buscar produto");
@@ -80,20 +80,22 @@ public class ProdutoDAOimpl implements GenericDAO {
                 ConnectionFactory.closeConnection(this.connection, stmt, rs);
             } catch(Exception e) {
                 System.out.println("Problemas na DAO ao fechar conexão");
+                e.printStackTrace();
             }
         }
 
-        return objeto;
+        return produto;
     }
 
     @Override
     public boolean Cadastrar(Object objeto) {
+        Produto produto = null;
         PreparedStatement stmt = null;
         String query = "INSERT INTO produto (descricao) VALUES (?)";
 
         try {
             stmt = this.connection.prepareStatement(query);
-            Produto produto = (Produto) objeto;
+            produto = (Produto) objeto;
             stmt.setString(1, produto.getDescricao());
             stmt.execute();
         } catch(SQLException e) {
@@ -105,6 +107,7 @@ public class ProdutoDAOimpl implements GenericDAO {
                 ConnectionFactory.closeConnection(this.connection, stmt);
             } catch(Exception e) {
                 System.out.println("Problema na DAO ao fechar conexao");
+                e.printStackTrace();
             }
         }
 
@@ -113,12 +116,34 @@ public class ProdutoDAOimpl implements GenericDAO {
 
     @Override
     public boolean alterar(Object objeto) {
-        String query = "UPDATE produto WHERE id=?, descricao=?";
-        return false;
+        Produto produto = null;
+        PreparedStatement stmt = null;
+        String query = "UPDATE produto SET descricao=? WHERE id=?";
+
+        try {
+            stmt = this.connection.prepareStatement(query);
+            produto = (Produto) objeto;
+            stmt.setString(1, produto.getDescricao());
+            stmt.setInt(2, produto.getId());
+            stmt.execute();
+        } catch(SQLException e) {
+            System.out.println("Problema na DAO ao alterar um produto");
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(this.connection, stmt);
+            } catch(Exception e) {
+                System.out.println("Problema na DAO ao fechar conexao");
+                e.printStackTrace();
+            }
+        }
+
+        return true;
     }
 
     @Override
     public void excluir(Integer id) {
-        String query = "DELETE produto WHERE id=?";
+
     }
 }
