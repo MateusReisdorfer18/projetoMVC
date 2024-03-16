@@ -45,6 +45,16 @@ public class ProdutoController {
     }
 
     public boolean cadastrar(Produto produto) {
-        return false;
+        try {
+            GenericDAO dao = new ProdutoDAOimpl();
+
+            dao.Cadastrar(produto);
+
+            return true;
+        } catch(Exception e) {
+            System.out.println("Problemas no controller para cadastrar produto");
+            e.printStackTrace();
+            return false;
+        }
     }
 }

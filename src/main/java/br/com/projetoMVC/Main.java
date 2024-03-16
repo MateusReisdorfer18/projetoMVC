@@ -14,6 +14,10 @@ public class Main {
         }
 
         System.out.println("Produto encontrado por id");
-        System.out.println(produtoController.listarPorId(5).getId());
+        System.out.println(produtoController.listarPorId(7).getDescricao());
+
+        /*Produto produto = new Produto();
+        produto.setDescricao("Teclado logitech");
+        System.out.println(produtoController.cadastrar(produto));*/
     }
 }

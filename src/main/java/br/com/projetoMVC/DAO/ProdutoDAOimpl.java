@@ -88,8 +88,27 @@ public class ProdutoDAOimpl implements GenericDAO {
 
     @Override
     public boolean Cadastrar(Object objeto) {
-        String query = "INSERT INTO produto WHERE descricao=?";
-        return false;
+        PreparedStatement stmt = null;
+        String query = "INSERT INTO produto (descricao) VALUES (?)";
+
+        try {
+            stmt = this.connection.prepareStatement(query);
+            Produto produto = (Produto) objeto;
+            stmt.setString(1, produto.getDescricao());
+            stmt.execute();
+        } catch(SQLException e) {
+            System.out.println("Problemas no DAO ao cadastrar produto");
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(this.connection, stmt);
+            } catch(Exception e) {
+                System.out.println("Problema na DAO ao fechar conexao");
+            }
+        }
+
+        return true;
     }
 
     @Override
