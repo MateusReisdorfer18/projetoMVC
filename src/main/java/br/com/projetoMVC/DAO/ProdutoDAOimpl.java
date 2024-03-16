@@ -16,7 +16,6 @@ public class ProdutoDAOimpl implements GenericDAO {
     public ProdutoDAOimpl() throws Exception {
         try {
             this.connection = ConnectionFactory.getConnection();
-            System.out.println("Conectado com sucesso!");
         }catch(Exception e){
             throw new Exception(e.getMessage());
         }
@@ -42,6 +41,7 @@ public class ProdutoDAOimpl implements GenericDAO {
         } catch(SQLException e) {
             System.out.println("Problemas na DAO ao listar Produto!");
             e.printStackTrace();
+            return null;
         } finally {
             try {
                 ConnectionFactory.closeConnection(this.connection, stmt, rs);
@@ -49,18 +49,46 @@ public class ProdutoDAOimpl implements GenericDAO {
                 System.out.println("Problemas na DAO ao fechar conexao");
             }
         }
+
         return lista;
     }
 
     @Override
     public Object listarPorId(Integer id) {
-        String query = "SELECT id FROM produto WHERE id=?";
-        return null;
+        Object objeto = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String query = "SELECT * FROM produto WHERE id=?";
+
+        try {
+            stmt = this.connection.prepareStatement(query);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+
+            while(rs.next()) {
+                Produto produto = new Produto();
+                produto.setId(rs.getInt("id"));
+                produto.setDescricao(rs.getString("descricao"));
+                objeto = produto;
+            }
+        } catch(SQLException e) {
+            System.out.println("Problemas na DAO ao buscar produto");
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(this.connection, stmt, rs);
+            } catch(Exception e) {
+                System.out.println("Problemas na DAO ao fechar conexão");
+            }
+        }
+
+        return objeto;
     }
 
     @Override
     public boolean Cadastrar(Object objeto) {
-        String query = "INSERT INTO produto WHERE id=?, descricao=?";
+        String query = "INSERT INTO produto WHERE descricao=?";
         return false;
     }
 

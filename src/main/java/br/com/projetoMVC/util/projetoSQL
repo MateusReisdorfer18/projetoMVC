@@ -1,0 +1,8 @@
+-- Declaracao de tabelas --
+
+CREATE TABLE produto (
+	id SERIAL,
+	descricao VARCHAR(250) NOT NULL,
+	CONSTRAINT pk_produto PRIMARY KEY (id)
+);
+
