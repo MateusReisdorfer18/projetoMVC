@@ -73,6 +73,13 @@ public class ProdutoController {
     }
 
     public void excluir(Integer id) {
+        try {
+            GenericDAO dao = new ProdutoDAOimpl();
 
+            dao.excluir(id);
+        } catch(Exception e) {
+            System.out.println("Problemas no controller para excluir produto");
+            e.printStackTrace();
+        }
     }
 }

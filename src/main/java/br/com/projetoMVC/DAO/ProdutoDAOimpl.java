@@ -144,6 +144,23 @@ public class ProdutoDAOimpl implements GenericDAO {
 
     @Override
     public void excluir(Integer id) {
+        PreparedStatement stmt = null;
+        String query = "DELETE FROM produto WHERE id=?";
 
+        try {
+            stmt = this.connection.prepareStatement(query);
+            stmt.setInt(1, id);
+            stmt.execute();
+        } catch (Exception e) {
+            System.out.println("Problema na DAO ao excluir um produto");
+            e.printStackTrace();
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(this.connection, stmt);
+            } catch(Exception e) {
+                System.out.println("Problema na DAO ao fechar conexao");
+                e.printStackTrace();
+            }
+        }
     }
 }
